@@ -24,7 +24,16 @@ db.init_app(app)
 @app.route('/')
 def home():
     return ''
+@app.route("/scientists")
+def scientists():
+    scientists = [scientist.to_dict(rules=("-missions",)) for scientist in Scientist.query]
+    return make_response(scientists, 200)
 
+@app.route("/scientists/<int:id>")
+def scientist_id(id):
+    if scientist:= db.session.get(Scientist, id):
+        return make_response(scientist.to_dict(), 200)
+    return make_response({"error": "Scientist not found"}, 404)
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
